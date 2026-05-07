@@ -1,3 +1,4 @@
+name: Merged Bank Direct + DNS Clean + Microsoft Split Fixed
 desc: CN direct, bank/payment/loan/risk-control real IP direct, Microsoft auth direct, Microsoft business proxy, overseas DNS via proxy.
 
 dns:
@@ -7,298 +8,123 @@ dns:
   fake-ip-range: 198.18.0.1/16
   follow-rule: true
 
-  # 启动 / 解析 DNS 服务自身 / 代理节点域名使用
-  # 保留大陆 DNS，保证中国大陆网络下 Stash 能启动、订阅节点能解析
   default-nameserver: #!replace
     - 223.5.5.5
     - 119.29.29.29
 
-  # 默认 DNS：非大陆、非直连域名使用
-  # 配合 rules 里的 1.1.1.1/32 走代理，避免境外 DNS 从大陆直连
   nameserver: #!replace
     - https://1.1.1.1/dns-query
 
-  # 替换旧 fallback，防止原配置残留大陆 DNS 或明文 DNS
   fallback: #!replace
     - https://1.1.1.1/dns-query
 
-  # DNS 分流策略：
-  # 直连类域名用大陆 DNS，保证 DNS 出口和 DIRECT 连接出口一致
-  # 代理类域名不写在这里，默认走 Cloudflare DoH + 代理链
   nameserver-policy: #!replace
     # Mainland broad
-    '+.cn':
-      - https://223.5.5.5/dns-query
-      - https://doh.pub/dns-query
-    'geosite:cn':
-      - https://223.5.5.5/dns-query
-      - https://doh.pub/dns-query
+    '+.cn': https://223.5.5.5/dns-query
+    'geosite:cn': https://223.5.5.5/dns-query
 
     # Mainland major banks
-    '+.icbc.com.cn':
-      - https://223.5.5.5/dns-query
-      - https://doh.pub/dns-query
-    '+.icbc-ltd.com':
-      - https://223.5.5.5/dns-query
-      - https://doh.pub/dns-query
-    '+.ccb.com':
-      - https://223.5.5.5/dns-query
-      - https://doh.pub/dns-query
-    '+.ccb.com.cn':
-      - https://223.5.5.5/dns-query
-      - https://doh.pub/dns-query
-    '+.abchina.com':
-      - https://223.5.5.5/dns-query
-      - https://doh.pub/dns-query
-    '+.boc.cn':
-      - https://223.5.5.5/dns-query
-      - https://doh.pub/dns-query
-    '+.bankofchina.com':
-      - https://223.5.5.5/dns-query
-      - https://doh.pub/dns-query
-    '+.bankcomm.com':
-      - https://223.5.5.5/dns-query
-      - https://doh.pub/dns-query
-    '+.psbc.com':
-      - https://223.5.5.5/dns-query
-      - https://doh.pub/dns-query
-    '+.psbc.com.cn':
-      - https://223.5.5.5/dns-query
-      - https://doh.pub/dns-query
-    '+.cmbchina.com':
-      - https://223.5.5.5/dns-query
-      - https://doh.pub/dns-query
-    '+.8008205555.com':
-      - https://223.5.5.5/dns-query
-      - https://doh.pub/dns-query
-    '+.cib.com.cn':
-      - https://223.5.5.5/dns-query
-      - https://doh.pub/dns-query
-    '+.jjccb.com':
-      - https://223.5.5.5/dns-query
-      - https://doh.pub/dns-query
-    '+.jycbank.com':
-      - https://223.5.5.5/dns-query
-      - https://doh.pub/dns-query
-    '+.jx-bank.com':
-      - https://223.5.5.5/dns-query
-      - https://doh.pub/dns-query
-    '+.spdb.com.cn':
-      - https://223.5.5.5/dns-query
-      - https://doh.pub/dns-query
-    '+.citicbank.com':
-      - https://223.5.5.5/dns-query
-      - https://doh.pub/dns-query
-    '+.cebbank.com':
-      - https://223.5.5.5/dns-query
-      - https://doh.pub/dns-query
-    '+.cmbc.com.cn':
-      - https://223.5.5.5/dns-query
-      - https://doh.pub/dns-query
-    '+.hxb.com.cn':
-      - https://223.5.5.5/dns-query
-      - https://doh.pub/dns-query
-    '+.cgbchina.com.cn':
-      - https://223.5.5.5/dns-query
-      - https://doh.pub/dns-query
-    '+.pingan.com':
-      - https://223.5.5.5/dns-query
-      - https://doh.pub/dns-query
+    '+.icbc.com.cn': https://223.5.5.5/dns-query
+    '+.icbc-ltd.com': https://223.5.5.5/dns-query
+    '+.ccb.com': https://223.5.5.5/dns-query
+    '+.ccb.com.cn': https://223.5.5.5/dns-query
+    '+.abchina.com': https://223.5.5.5/dns-query
+    '+.boc.cn': https://223.5.5.5/dns-query
+    '+.bankofchina.com': https://223.5.5.5/dns-query
+    '+.bankcomm.com': https://223.5.5.5/dns-query
+    '+.psbc.com': https://223.5.5.5/dns-query
+    '+.psbc.com.cn': https://223.5.5.5/dns-query
+    '+.cmbchina.com': https://223.5.5.5/dns-query
+    '+.8008205555.com': https://223.5.5.5/dns-query
+    '+.cib.com.cn': https://223.5.5.5/dns-query
+    '+.jjccb.com': https://223.5.5.5/dns-query
+    '+.jycbank.com': https://223.5.5.5/dns-query
+    '+.jx-bank.com': https://223.5.5.5/dns-query
+    '+.spdb.com.cn': https://223.5.5.5/dns-query
+    '+.citicbank.com': https://223.5.5.5/dns-query
+    '+.cebbank.com': https://223.5.5.5/dns-query
+    '+.cmbc.com.cn': https://223.5.5.5/dns-query
+    '+.hxb.com.cn': https://223.5.5.5/dns-query
+    '+.cgbchina.com.cn': https://223.5.5.5/dns-query
+    '+.pingan.com': https://223.5.5.5/dns-query
 
-    '+.mucfc.com':
-      - https://223.5.5.5/dns-query
-      - https://doh.pub/dns-query
+    # 招联金融 / 贷款
+    '+.mucfc.com': https://223.5.5.5/dns-query
 
-    '+.hsbc.com.hk':
-      - https://223.5.5.5/dns-query
-      - https://doh.pub/dns-query
-    '+.hsbc.com':
-      - https://223.5.5.5/dns-query
-      - https://doh.pub/dns-query
-    '+.hangseng.com':
-      - https://223.5.5.5/dns-query
-      - https://doh.pub/dns-query
-    '+.za.group':
-      - https://223.5.5.5/dns-query
-      - https://doh.pub/dns-query
-    '+.za.bank':
-      - https://223.5.5.5/dns-query
-      - https://doh.pub/dns-query
-    '+.welab.bank':
-      - https://223.5.5.5/dns-query
-      - https://doh.pub/dns-query
-    '+.antbank.hk':
-      - https://223.5.5.5/dns-query
-      - https://doh.pub/dns-query
-    '+.elebank.com':
-      - https://223.5.5.5/dns-query
-      - https://doh.pub/dns-query
+    # HK banks / fintech direct
+    '+.hsbc.com.hk': https://223.5.5.5/dns-query
+    '+.hsbc.com': https://223.5.5.5/dns-query
+    '+.hangseng.com': https://223.5.5.5/dns-query
+    '+.za.group': https://223.5.5.5/dns-query
+    '+.za.bank': https://223.5.5.5/dns-query
+    '+.welab.bank': https://223.5.5.5/dns-query
+    '+.antbank.hk': https://223.5.5.5/dns-query
+    '+.elebank.com': https://223.5.5.5/dns-query
 
-    '+.alipay.com':
-      - https://223.5.5.5/dns-query
-      - https://doh.pub/dns-query
-    '+.alipayobjects.com':
-      - https://223.5.5.5/dns-query
-      - https://doh.pub/dns-query
-    '+.alipaydns.com':
-      - https://223.5.5.5/dns-query
-      - https://doh.pub/dns-query
-    '+.antgroup.com':
-      - https://223.5.5.5/dns-query
-      - https://doh.pub/dns-query
-    '+.antfin.com':
-      - https://223.5.5.5/dns-query
-      - https://doh.pub/dns-query
-    '+.mybank.cn':
-      - https://223.5.5.5/dns-query
-      - https://doh.pub/dns-query
+    # Alipay / Ant / Huabei / MYbank
+    '+.alipay.com': https://223.5.5.5/dns-query
+    '+.alipayobjects.com': https://223.5.5.5/dns-query
+    '+.alipaydns.com': https://223.5.5.5/dns-query
+    '+.antgroup.com': https://223.5.5.5/dns-query
+    '+.antfin.com': https://223.5.5.5/dns-query
+    '+.mybank.cn': https://223.5.5.5/dns-query
 
-    '+.meituan.com':
-      - https://223.5.5.5/dns-query
-      - https://doh.pub/dns-query
-    '+.meituan.net':
-      - https://223.5.5.5/dns-query
-      - https://doh.pub/dns-query
-    '+.meituanimg.com':
-      - https://223.5.5.5/dns-query
-      - https://doh.pub/dns-query
-    '+.sankuai.com':
-      - https://223.5.5.5/dns-query
-      - https://doh.pub/dns-query
-    '+.dianping.com':
-      - https://223.5.5.5/dns-query
-      - https://doh.pub/dns-query
-    '+.dpfile.com':
-      - https://223.5.5.5/dns-query
-      - https://doh.pub/dns-query
-    '+.maoyan.com':
-      - https://223.5.5.5/dns-query
-      - https://doh.pub/dns-query
+    # Meituan Wallet / 月付 / 美团金融
+    '+.meituan.com': https://223.5.5.5/dns-query
+    '+.meituan.net': https://223.5.5.5/dns-query
+    '+.meituanimg.com': https://223.5.5.5/dns-query
+    '+.sankuai.com': https://223.5.5.5/dns-query
+    '+.dianping.com': https://223.5.5.5/dns-query
+    '+.dpfile.com': https://223.5.5.5/dns-query
+    '+.maoyan.com': https://223.5.5.5/dns-query
 
-    '+.douyin.com':
-      - https://223.5.5.5/dns-query
-      - https://doh.pub/dns-query
-    '+.douyinpay.com':
-      - https://223.5.5.5/dns-query
-      - https://doh.pub/dns-query
-    '+.amemv.com':
-      - https://223.5.5.5/dns-query
-      - https://doh.pub/dns-query
-    '+.snssdk.com':
-      - https://223.5.5.5/dns-query
-      - https://doh.pub/dns-query
-    '+.bytedance.com':
-      - https://223.5.5.5/dns-query
-      - https://doh.pub/dns-query
-    '+.byteimg.com':
-      - https://223.5.5.5/dns-query
-      - https://doh.pub/dns-query
-    '+.pstatp.com':
-      - https://223.5.5.5/dns-query
-      - https://doh.pub/dns-query
-    '+.toutiao.com':
-      - https://223.5.5.5/dns-query
-      - https://doh.pub/dns-query
-    '+.zijieapi.com':
-      - https://223.5.5.5/dns-query
-      - https://doh.pub/dns-query
-    '+.bytecdn.cn':
-      - https://223.5.5.5/dns-query
-      - https://doh.pub/dns-query
+    # Douyin / Douyin Pay / 抖音月付
+    '+.douyin.com': https://223.5.5.5/dns-query
+    '+.douyinpay.com': https://223.5.5.5/dns-query
+    '+.amemv.com': https://223.5.5.5/dns-query
+    '+.snssdk.com': https://223.5.5.5/dns-query
+    '+.bytedance.com': https://223.5.5.5/dns-query
+    '+.byteimg.com': https://223.5.5.5/dns-query
+    '+.pstatp.com': https://223.5.5.5/dns-query
+    '+.toutiao.com': https://223.5.5.5/dns-query
+    '+.zijieapi.com': https://223.5.5.5/dns-query
+    '+.bytecdn.cn': https://223.5.5.5/dns-query
 
-    '+.unionpay.com':
-      - https://223.5.5.5/dns-query
-      - https://doh.pub/dns-query
-    '+.95516.com':
-      - https://223.5.5.5/dns-query
-      - https://doh.pub/dns-query
-    '+.chinapay.com':
-      - https://223.5.5.5/dns-query
-      - https://doh.pub/dns-query
-    '+.chinaums.com':
-      - https://223.5.5.5/dns-query
-      - https://doh.pub/dns-query
-    '+.tenpay.com':
-      - https://223.5.5.5/dns-query
-      - https://doh.pub/dns-query
-    '+.weixin.qq.com':
-      - https://223.5.5.5/dns-query
-      - https://doh.pub/dns-query
-    '+.wechat.com':
-      - https://223.5.5.5/dns-query
-      - https://doh.pub/dns-query
-    '+.qq.com':
-      - https://223.5.5.5/dns-query
-      - https://doh.pub/dns-query
-    '+.gtimg.com':
-      - https://223.5.5.5/dns-query
-      - https://doh.pub/dns-query
-    '+.gtimg.cn':
-      - https://223.5.5.5/dns-query
-      - https://doh.pub/dns-query
-    '+.qcloud.com':
-      - https://223.5.5.5/dns-query
-      - https://doh.pub/dns-query
-    '+.tencentcloudapi.com':
-      - https://223.5.5.5/dns-query
-      - https://doh.pub/dns-query
-    '+.geetest.com':
-      - https://223.5.5.5/dns-query
-      - https://doh.pub/dns-query
-    '+.aliyuncs.com':
-      - https://223.5.5.5/dns-query
-      - https://doh.pub/dns-query
-    '+.aliyun.com':
-      - https://223.5.5.5/dns-query
-      - https://doh.pub/dns-query
-    '+.alicdn.com':
-      - https://223.5.5.5/dns-query
-      - https://doh.pub/dns-query
-    '+.mmstat.com':
-      - https://223.5.5.5/dns-query
-      - https://doh.pub/dns-query
-    '+.umeng.com':
-      - https://223.5.5.5/dns-query
-      - https://doh.pub/dns-query
-    '+.taobao.com':
-      - https://223.5.5.5/dns-query
-      - https://doh.pub/dns-query
-    '+.tmall.com':
-      - https://223.5.5.5/dns-query
-      - https://doh.pub/dns-query
+    # Common payment / card / risk-control infrastructure
+    '+.unionpay.com': https://223.5.5.5/dns-query
+    '+.95516.com': https://223.5.5.5/dns-query
+    '+.chinapay.com': https://223.5.5.5/dns-query
+    '+.chinaums.com': https://223.5.5.5/dns-query
+    '+.tenpay.com': https://223.5.5.5/dns-query
+    '+.weixin.qq.com': https://223.5.5.5/dns-query
+    '+.wechat.com': https://223.5.5.5/dns-query
+    '+.qq.com': https://223.5.5.5/dns-query
+    '+.gtimg.com': https://223.5.5.5/dns-query
+    '+.gtimg.cn': https://223.5.5.5/dns-query
+    '+.qcloud.com': https://223.5.5.5/dns-query
+    '+.tencentcloudapi.com': https://223.5.5.5/dns-query
+    '+.geetest.com': https://223.5.5.5/dns-query
+    '+.aliyuncs.com': https://223.5.5.5/dns-query
+    '+.aliyun.com': https://223.5.5.5/dns-query
+    '+.alicdn.com': https://223.5.5.5/dns-query
+    '+.mmstat.com': https://223.5.5.5/dns-query
+    '+.umeng.com': https://223.5.5.5/dns-query
+    '+.taobao.com': https://223.5.5.5/dns-query
+    '+.tmall.com': https://223.5.5.5/dns-query
 
-    '+.mashreq.com':
-      - https://223.5.5.5/dns-query
-      - https://doh.pub/dns-query
-    '+.dubizzle.com':
-      - https://223.5.5.5/dns-query
-      - https://doh.pub/dns-query
-    '+.likecard.com':
-      - https://223.5.5.5/dns-query
-      - https://doh.pub/dns-query
+    # UAE / shopping direct
+    '+.mashreq.com': https://223.5.5.5/dns-query
+    '+.dubizzle.com': https://223.5.5.5/dns-query
+    '+.likecard.com': https://223.5.5.5/dns-query
 
     # Microsoft identity / auth direct
-    '+.microsoftonline.com':
-      - https://223.5.5.5/dns-query
-      - https://doh.pub/dns-query
-    '+.msauth.net':
-      - https://223.5.5.5/dns-query
-      - https://doh.pub/dns-query
-    '+.msftauth.net':
-      - https://223.5.5.5/dns-query
-      - https://doh.pub/dns-query
-    '+.msftidentity.com':
-      - https://223.5.5.5/dns-query
-      - https://doh.pub/dns-query
-    '+.live.com':
-      - https://223.5.5.5/dns-query
-      - https://doh.pub/dns-query
-    '+.login.microsoft.com':
-      - https://223.5.5.5/dns-query
-      - https://doh.pub/dns-query
-    '+.login.windows.net':
-      - https://223.5.5.5/dns-query
-      - https://doh.pub/dns-query
+    '+.microsoftonline.com': https://223.5.5.5/dns-query
+    '+.msauth.net': https://223.5.5.5/dns-query
+    '+.msftauth.net': https://223.5.5.5/dns-query
+    '+.msftidentity.com': https://223.5.5.5/dns-query
+    '+.live.com': https://223.5.5.5/dns-query
+    '+.login.microsoft.com': https://223.5.5.5/dns-query
+    '+.login.windows.net': https://223.5.5.5/dns-query
 
   fake-ip-filter: #!replace
     # Basic local / system compatibility
@@ -368,9 +194,11 @@ dns:
     - 'pingan.com'
     - '*.pingan.com'
 
+    # 招联金融 / 贷款
     - 'mucfc.com'
     - '*.mucfc.com'
 
+    # HK banks / fintech
     - 'hsbc.com.hk'
     - '*.hsbc.com.hk'
     - 'hsbc.com'
@@ -388,6 +216,7 @@ dns:
     - 'elebank.com'
     - '*.elebank.com'
 
+    # Alipay / Ant / Huabei / MYbank
     - 'alipay.com'
     - '*.alipay.com'
     - 'alipayobjects.com'
@@ -401,6 +230,7 @@ dns:
     - 'mybank.cn'
     - '*.mybank.cn'
 
+    # Meituan Wallet / 月付 / 美团金融
     - 'meituan.com'
     - '*.meituan.com'
     - 'meituan.net'
@@ -416,6 +246,7 @@ dns:
     - 'maoyan.com'
     - '*.maoyan.com'
 
+    # Douyin / Douyin Pay / 抖音月付
     - 'douyin.com'
     - '*.douyin.com'
     - 'douyinpay.com'
@@ -437,6 +268,7 @@ dns:
     - 'bytecdn.cn'
     - '*.bytecdn.cn'
 
+    # Common payment / card / risk-control infrastructure
     - 'unionpay.com'
     - '*.unionpay.com'
     - '95516.com'
@@ -478,6 +310,7 @@ dns:
     - 'tmall.com'
     - '*.tmall.com'
 
+    # UAE / shopping
     - 'mashreq.com'
     - '*.mashreq.com'
     - 'dubizzle.com'
@@ -488,7 +321,7 @@ dns:
     - 'en.likecard.com'
 
     # Microsoft identity / auth only
-    # 注意：Teams / SharePoint / OneDrive / Outlook 业务域名不放这里，让其使用 Fake-IP + 代理
+    # Teams / SharePoint / OneDrive / Outlook 业务域名不放这里，让其使用 Fake-IP + 代理
     - 'microsoftonline.com'
     - '*.microsoftonline.com'
     - 'msauth.net'
@@ -540,8 +373,10 @@ rules: #!replace
   - DOMAIN-SUFFIX,cgbchina.com.cn,DIRECT
   - DOMAIN-SUFFIX,pingan.com,DIRECT
 
+  # 4. 招联金融 / 贷款
   - DOMAIN-SUFFIX,mucfc.com,DIRECT
 
+  # 5. HK banks / fintech
   - DOMAIN-SUFFIX,hsbc.com.hk,DIRECT
   - DOMAIN-SUFFIX,hsbc.com,DIRECT
   - DOMAIN-SUFFIX,hangseng.com,DIRECT
@@ -551,6 +386,7 @@ rules: #!replace
   - DOMAIN-SUFFIX,antbank.hk,DIRECT
   - DOMAIN-SUFFIX,elebank.com,DIRECT
 
+  # 6. Alipay / Ant / Huabei / MYbank
   - DOMAIN-SUFFIX,alipay.com,DIRECT
   - DOMAIN-SUFFIX,alipayobjects.com,DIRECT
   - DOMAIN-SUFFIX,alipaydns.com,DIRECT
@@ -558,6 +394,7 @@ rules: #!replace
   - DOMAIN-SUFFIX,antfin.com,DIRECT
   - DOMAIN-SUFFIX,mybank.cn,DIRECT
 
+  # 7. Meituan Wallet / 月付 / 美团金融
   - DOMAIN-SUFFIX,meituan.com,DIRECT
   - DOMAIN-SUFFIX,meituan.net,DIRECT
   - DOMAIN-SUFFIX,meituanimg.com,DIRECT
@@ -566,6 +403,7 @@ rules: #!replace
   - DOMAIN-SUFFIX,dpfile.com,DIRECT
   - DOMAIN-SUFFIX,maoyan.com,DIRECT
 
+  # 8. Douyin / Douyin Pay / 抖音月付
   - DOMAIN-SUFFIX,douyin.com,DIRECT
   - DOMAIN-SUFFIX,douyinpay.com,DIRECT
   - DOMAIN-SUFFIX,amemv.com,DIRECT
@@ -577,6 +415,7 @@ rules: #!replace
   - DOMAIN-SUFFIX,zijieapi.com,DIRECT
   - DOMAIN-SUFFIX,bytecdn.cn,DIRECT
 
+  # 9. Common payment / card / risk-control infrastructure
   - DOMAIN-SUFFIX,unionpay.com,DIRECT
   - DOMAIN-SUFFIX,95516.com,DIRECT
   - DOMAIN-SUFFIX,chinapay.com,DIRECT
@@ -598,12 +437,13 @@ rules: #!replace
   - DOMAIN-SUFFIX,taobao.com,DIRECT
   - DOMAIN-SUFFIX,tmall.com,DIRECT
 
+  # 10. UAE / shopping
   - DOMAIN-SUFFIX,mashreq.com,DIRECT
   - DOMAIN-SUFFIX,dubizzle.com,DIRECT
   - DOMAIN-SUFFIX,likecard.com,DIRECT
 
   # 11. Microsoft identity / auth layer - DIRECT
-  # 目标：登录、Token、身份验证尽量维持真实网络位置，降低 Entra 风控触发概率
+  # 登录、Token、身份验证尽量维持真实网络位置
   - DOMAIN-SUFFIX,microsoftonline.com,DIRECT
   - DOMAIN-SUFFIX,msauth.net,DIRECT
   - DOMAIN-SUFFIX,msftauth.net,DIRECT
@@ -613,8 +453,8 @@ rules: #!replace
   - DOMAIN-SUFFIX,login.windows.net,DIRECT
 
   # 12. Microsoft business layer - PROXY
-  # 目标：Teams / SharePoint / OneDrive / Outlook 业务流量走代理
-  # 注意：Teams 会议媒体流不一定完全被这些域名规则覆盖，后续看 Stash 日志补 IP/域名
+  # Teams / SharePoint / OneDrive / Outlook 业务流量走代理
+  # Teams 会议媒体流不一定完全被域名规则覆盖，后续看 Stash 日志补 IP/域名
   - DOMAIN-SUFFIX,teams.microsoft.com,🚀 节点选择
   - DOMAIN-SUFFIX,skype.com,🚀 节点选择
   - DOMAIN-SUFFIX,skypeassets.com,🚀 节点选择
