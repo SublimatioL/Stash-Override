@@ -1,133 +1,32 @@
-name: Merged Bank Direct + DNS Clean + Microsoft Split Fixed
-desc: CN direct, bank/payment/loan/risk-control real IP direct, Microsoft auth direct, Microsoft business proxy, overseas DNS via proxy.
+name: Stash FakeIP TUN Bank Microsoft Optimized
+desc: Use Stash Fake-IP + TUN logic. Bank/payment/auth direct real IP; overseas traffic fake-ip proxy; avoid DNS timeout.
 
 dns:
   enable: true
   ipv6: false
   enhanced-mode: fake-ip
   fake-ip-range: 198.18.0.1/16
-  follow-rule: true
 
+  # 核心：Stash 日用优化版不要开 follow-rule
+  # 代理域名靠 Fake-IP，不靠境外 DoH 硬解析
+  follow-rule: false
+
+  # 启动 / DNS 服务域名解析使用
   default-nameserver: #!replace
     - 223.5.5.5
     - 119.29.29.29
 
+  # 主 DNS：大陆 DoH，保证中国大陆起点速度与可用性
   nameserver: #!replace
-    - https://1.1.1.1/dns-query
+    - https://223.5.5.5/dns-query
+    - https://doh.pub/dns-query
 
+  # 覆盖原配置里可能存在的 fallback，避免残留 8.8.8.8 / 1.1.1.1 导致 timeout
   fallback: #!replace
-    - https://1.1.1.1/dns-query
-
-  nameserver-policy: #!replace
-    # Mainland broad
-    '+.cn': https://223.5.5.5/dns-query
-    'geosite:cn': https://223.5.5.5/dns-query
-
-    # Mainland major banks
-    '+.icbc.com.cn': https://223.5.5.5/dns-query
-    '+.icbc-ltd.com': https://223.5.5.5/dns-query
-    '+.ccb.com': https://223.5.5.5/dns-query
-    '+.ccb.com.cn': https://223.5.5.5/dns-query
-    '+.abchina.com': https://223.5.5.5/dns-query
-    '+.boc.cn': https://223.5.5.5/dns-query
-    '+.bankofchina.com': https://223.5.5.5/dns-query
-    '+.bankcomm.com': https://223.5.5.5/dns-query
-    '+.psbc.com': https://223.5.5.5/dns-query
-    '+.psbc.com.cn': https://223.5.5.5/dns-query
-    '+.cmbchina.com': https://223.5.5.5/dns-query
-    '+.8008205555.com': https://223.5.5.5/dns-query
-    '+.cib.com.cn': https://223.5.5.5/dns-query
-    '+.jjccb.com': https://223.5.5.5/dns-query
-    '+.jycbank.com': https://223.5.5.5/dns-query
-    '+.jx-bank.com': https://223.5.5.5/dns-query
-    '+.spdb.com.cn': https://223.5.5.5/dns-query
-    '+.citicbank.com': https://223.5.5.5/dns-query
-    '+.cebbank.com': https://223.5.5.5/dns-query
-    '+.cmbc.com.cn': https://223.5.5.5/dns-query
-    '+.hxb.com.cn': https://223.5.5.5/dns-query
-    '+.cgbchina.com.cn': https://223.5.5.5/dns-query
-    '+.pingan.com': https://223.5.5.5/dns-query
-
-    # 招联金融 / 贷款
-    '+.mucfc.com': https://223.5.5.5/dns-query
-
-    # HK banks / fintech direct
-    '+.hsbc.com.hk': https://223.5.5.5/dns-query
-    '+.hsbc.com': https://223.5.5.5/dns-query
-    '+.hangseng.com': https://223.5.5.5/dns-query
-    '+.za.group': https://223.5.5.5/dns-query
-    '+.za.bank': https://223.5.5.5/dns-query
-    '+.welab.bank': https://223.5.5.5/dns-query
-    '+.antbank.hk': https://223.5.5.5/dns-query
-    '+.elebank.com': https://223.5.5.5/dns-query
-
-    # Alipay / Ant / Huabei / MYbank
-    '+.alipay.com': https://223.5.5.5/dns-query
-    '+.alipayobjects.com': https://223.5.5.5/dns-query
-    '+.alipaydns.com': https://223.5.5.5/dns-query
-    '+.antgroup.com': https://223.5.5.5/dns-query
-    '+.antfin.com': https://223.5.5.5/dns-query
-    '+.mybank.cn': https://223.5.5.5/dns-query
-
-    # Meituan Wallet / 月付 / 美团金融
-    '+.meituan.com': https://223.5.5.5/dns-query
-    '+.meituan.net': https://223.5.5.5/dns-query
-    '+.meituanimg.com': https://223.5.5.5/dns-query
-    '+.sankuai.com': https://223.5.5.5/dns-query
-    '+.dianping.com': https://223.5.5.5/dns-query
-    '+.dpfile.com': https://223.5.5.5/dns-query
-    '+.maoyan.com': https://223.5.5.5/dns-query
-
-    # Douyin / Douyin Pay / 抖音月付
-    '+.douyin.com': https://223.5.5.5/dns-query
-    '+.douyinpay.com': https://223.5.5.5/dns-query
-    '+.amemv.com': https://223.5.5.5/dns-query
-    '+.snssdk.com': https://223.5.5.5/dns-query
-    '+.bytedance.com': https://223.5.5.5/dns-query
-    '+.byteimg.com': https://223.5.5.5/dns-query
-    '+.pstatp.com': https://223.5.5.5/dns-query
-    '+.toutiao.com': https://223.5.5.5/dns-query
-    '+.zijieapi.com': https://223.5.5.5/dns-query
-    '+.bytecdn.cn': https://223.5.5.5/dns-query
-
-    # Common payment / card / risk-control infrastructure
-    '+.unionpay.com': https://223.5.5.5/dns-query
-    '+.95516.com': https://223.5.5.5/dns-query
-    '+.chinapay.com': https://223.5.5.5/dns-query
-    '+.chinaums.com': https://223.5.5.5/dns-query
-    '+.tenpay.com': https://223.5.5.5/dns-query
-    '+.weixin.qq.com': https://223.5.5.5/dns-query
-    '+.wechat.com': https://223.5.5.5/dns-query
-    '+.qq.com': https://223.5.5.5/dns-query
-    '+.gtimg.com': https://223.5.5.5/dns-query
-    '+.gtimg.cn': https://223.5.5.5/dns-query
-    '+.qcloud.com': https://223.5.5.5/dns-query
-    '+.tencentcloudapi.com': https://223.5.5.5/dns-query
-    '+.geetest.com': https://223.5.5.5/dns-query
-    '+.aliyuncs.com': https://223.5.5.5/dns-query
-    '+.aliyun.com': https://223.5.5.5/dns-query
-    '+.alicdn.com': https://223.5.5.5/dns-query
-    '+.mmstat.com': https://223.5.5.5/dns-query
-    '+.umeng.com': https://223.5.5.5/dns-query
-    '+.taobao.com': https://223.5.5.5/dns-query
-    '+.tmall.com': https://223.5.5.5/dns-query
-
-    # UAE / shopping direct
-    '+.mashreq.com': https://223.5.5.5/dns-query
-    '+.dubizzle.com': https://223.5.5.5/dns-query
-    '+.likecard.com': https://223.5.5.5/dns-query
-
-    # Microsoft identity / auth direct
-    '+.microsoftonline.com': https://223.5.5.5/dns-query
-    '+.msauth.net': https://223.5.5.5/dns-query
-    '+.msftauth.net': https://223.5.5.5/dns-query
-    '+.msftidentity.com': https://223.5.5.5/dns-query
-    '+.live.com': https://223.5.5.5/dns-query
-    '+.login.microsoft.com': https://223.5.5.5/dns-query
-    '+.login.windows.net': https://223.5.5.5/dns-query
+    - https://223.5.5.5/dns-query
 
   fake-ip-filter: #!replace
-    # Basic local / system compatibility
+    # Local / system
     - '*.lan'
     - '*.local'
     - '*.localdomain'
@@ -140,13 +39,8 @@ dns:
     - 'captive.apple.com'
     - 'time.apple.com'
     - 'time-ios.apple.com'
-    - 'time1.cloud.tencent.com'
-    - 'time2.cloud.tencent.com'
-    - 'time3.cloud.tencent.com'
-    - 'time4.cloud.tencent.com'
-    - 'time5.cloud.tencent.com'
 
-    # Mainland major banks
+    # Mainland banks
     - 'icbc.com.cn'
     - '*.icbc.com.cn'
     - 'icbc-ltd.com'
@@ -216,6 +110,16 @@ dns:
     - 'elebank.com'
     - '*.elebank.com'
 
+    # UAE bank / shopping
+    - 'mashreq.com'
+    - '*.mashreq.com'
+    - 'dubizzle.com'
+    - '*.dubizzle.com'
+    - 'uae.dubizzle.com'
+    - 'likecard.com'
+    - '*.likecard.com'
+    - 'en.likecard.com'
+
     # Alipay / Ant / Huabei / MYbank
     - 'alipay.com'
     - '*.alipay.com'
@@ -268,7 +172,7 @@ dns:
     - 'bytecdn.cn'
     - '*.bytecdn.cn'
 
-    # Common payment / card / risk-control infrastructure
+    # Common payment / card / risk-control
     - 'unionpay.com'
     - '*.unionpay.com'
     - '95516.com'
@@ -310,18 +214,9 @@ dns:
     - 'tmall.com'
     - '*.tmall.com'
 
-    # UAE / shopping
-    - 'mashreq.com'
-    - '*.mashreq.com'
-    - 'dubizzle.com'
-    - '*.dubizzle.com'
-    - 'uae.dubizzle.com'
-    - 'likecard.com'
-    - '*.likecard.com'
-    - 'en.likecard.com'
-
     # Microsoft identity / auth only
-    # Teams / SharePoint / OneDrive / Outlook 业务域名不放这里，让其使用 Fake-IP + 代理
+    # 注意：不要把 Teams / SharePoint / OneDrive / Outlook 放进 fake-ip-filter
+    # 它们应走 Fake-IP + 代理
     - 'microsoftonline.com'
     - '*.microsoftonline.com'
     - 'msauth.net'
@@ -337,18 +232,8 @@ dns:
     - 'login.windows.net'
     - '*.login.windows.net'
 
-rules: #!replace
-  # 1. 境外 DNS 必须走代理，避免从中国大陆直连 1.1.1.1
-  - IP-CIDR,1.1.1.1/32,🚀 节点选择,no-resolve
-  - IP-CIDR,1.0.0.1/32,🚀 节点选择,no-resolve
-
-  # 2. 大陆 DNS 直连，保证大陆域名 / 银行 / 支付 DNS 和 DIRECT 出口一致
-  - IP-CIDR,223.5.5.5/32,DIRECT,no-resolve
-  - IP-CIDR,119.29.29.29/32,DIRECT,no-resolve
-  - IP-CIDR,120.53.53.53/32,DIRECT,no-resolve
-  - IP-CIDR,1.12.12.12/32,DIRECT,no-resolve
-
-  # 3. Mainland major banks
+rules:
+  # 1. Mainland banks
   - DOMAIN-SUFFIX,icbc.com.cn,DIRECT
   - DOMAIN-SUFFIX,icbc-ltd.com,DIRECT
   - DOMAIN-SUFFIX,ccb.com,DIRECT
@@ -373,10 +258,10 @@ rules: #!replace
   - DOMAIN-SUFFIX,cgbchina.com.cn,DIRECT
   - DOMAIN-SUFFIX,pingan.com,DIRECT
 
-  # 4. 招联金融 / 贷款
+  # 2. Loan
   - DOMAIN-SUFFIX,mucfc.com,DIRECT
 
-  # 5. HK banks / fintech
+  # 3. HK banks / fintech
   - DOMAIN-SUFFIX,hsbc.com.hk,DIRECT
   - DOMAIN-SUFFIX,hsbc.com,DIRECT
   - DOMAIN-SUFFIX,hangseng.com,DIRECT
@@ -386,7 +271,12 @@ rules: #!replace
   - DOMAIN-SUFFIX,antbank.hk,DIRECT
   - DOMAIN-SUFFIX,elebank.com,DIRECT
 
-  # 6. Alipay / Ant / Huabei / MYbank
+  # 4. UAE bank / shopping
+  - DOMAIN-SUFFIX,mashreq.com,DIRECT
+  - DOMAIN-SUFFIX,dubizzle.com,DIRECT
+  - DOMAIN-SUFFIX,likecard.com,DIRECT
+
+  # 5. Alipay / Ant / Huabei / MYbank
   - DOMAIN-SUFFIX,alipay.com,DIRECT
   - DOMAIN-SUFFIX,alipayobjects.com,DIRECT
   - DOMAIN-SUFFIX,alipaydns.com,DIRECT
@@ -394,7 +284,7 @@ rules: #!replace
   - DOMAIN-SUFFIX,antfin.com,DIRECT
   - DOMAIN-SUFFIX,mybank.cn,DIRECT
 
-  # 7. Meituan Wallet / 月付 / 美团金融
+  # 6. Meituan Wallet / 月付 / 美团金融
   - DOMAIN-SUFFIX,meituan.com,DIRECT
   - DOMAIN-SUFFIX,meituan.net,DIRECT
   - DOMAIN-SUFFIX,meituanimg.com,DIRECT
@@ -403,7 +293,7 @@ rules: #!replace
   - DOMAIN-SUFFIX,dpfile.com,DIRECT
   - DOMAIN-SUFFIX,maoyan.com,DIRECT
 
-  # 8. Douyin / Douyin Pay / 抖音月付
+  # 7. Douyin / Douyin Pay / 抖音月付
   - DOMAIN-SUFFIX,douyin.com,DIRECT
   - DOMAIN-SUFFIX,douyinpay.com,DIRECT
   - DOMAIN-SUFFIX,amemv.com,DIRECT
@@ -415,7 +305,7 @@ rules: #!replace
   - DOMAIN-SUFFIX,zijieapi.com,DIRECT
   - DOMAIN-SUFFIX,bytecdn.cn,DIRECT
 
-  # 9. Common payment / card / risk-control infrastructure
+  # 8. Common payment / card / risk-control
   - DOMAIN-SUFFIX,unionpay.com,DIRECT
   - DOMAIN-SUFFIX,95516.com,DIRECT
   - DOMAIN-SUFFIX,chinapay.com,DIRECT
@@ -437,13 +327,7 @@ rules: #!replace
   - DOMAIN-SUFFIX,taobao.com,DIRECT
   - DOMAIN-SUFFIX,tmall.com,DIRECT
 
-  # 10. UAE / shopping
-  - DOMAIN-SUFFIX,mashreq.com,DIRECT
-  - DOMAIN-SUFFIX,dubizzle.com,DIRECT
-  - DOMAIN-SUFFIX,likecard.com,DIRECT
-
-  # 11. Microsoft identity / auth layer - DIRECT
-  # 登录、Token、身份验证尽量维持真实网络位置
+  # 9. Microsoft identity / auth layer - DIRECT
   - DOMAIN-SUFFIX,microsoftonline.com,DIRECT
   - DOMAIN-SUFFIX,msauth.net,DIRECT
   - DOMAIN-SUFFIX,msftauth.net,DIRECT
@@ -452,9 +336,8 @@ rules: #!replace
   - DOMAIN-SUFFIX,login.microsoft.com,DIRECT
   - DOMAIN-SUFFIX,login.windows.net,DIRECT
 
-  # 12. Microsoft business layer - PROXY
-  # Teams / SharePoint / OneDrive / Outlook 业务流量走代理
-  # Teams 会议媒体流不一定完全被域名规则覆盖，后续看 Stash 日志补 IP/域名
+  # 10. Microsoft business layer - PROXY
+  # 不放 fake-ip-filter，让这些域名走 Fake-IP + 代理
   - DOMAIN-SUFFIX,teams.microsoft.com,🚀 节点选择
   - DOMAIN-SUFFIX,skype.com,🚀 节点选择
   - DOMAIN-SUFFIX,skypeassets.com,🚀 节点选择
@@ -465,12 +348,3 @@ rules: #!replace
   - DOMAIN-SUFFIX,sharepoint.com,🚀 节点选择
   - DOMAIN-SUFFIX,onedrive.com,🚀 节点选择
   - DOMAIN-SUFFIX,outlook.com,🚀 节点选择
-  - DOMAIN-SUFFIX,azureedge.net,🚀 节点选择
-  - DOMAIN-SUFFIX,windows.net,🚀 节点选择
-
-  # 13. 中国大陆域名 / 中国大陆 IP 直连
-  - GEOSITE,cn,DIRECT
-  - GEOIP,CN,DIRECT,no-resolve
-
-  # 14. 其他全部走代理
-  - MATCH,🚀 节点选择
