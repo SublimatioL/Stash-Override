@@ -1,350 +1,81 @@
-name: Stash FakeIP TUN Bank Microsoft Optimized
-desc: Use Stash Fake-IP + TUN logic. Bank/payment/auth direct real IP; overseas traffic fake-ip proxy; avoid DNS timeout.
-
 dns:
   enable: true
   ipv6: false
   enhanced-mode: fake-ip
   fake-ip-range: 198.18.0.1/16
-
-  # 核心：Stash 日用优化版不要开 follow-rule
-  # 代理域名靠 Fake-IP，不靠境外 DoH 硬解析
   follow-rule: false
+  skip-cert-verify: false
 
-  # 启动 / DNS 服务域名解析使用
   default-nameserver: #!replace
     - 223.5.5.5
     - 119.29.29.29
 
-  # 主 DNS：大陆 DoH，保证中国大陆起点速度与可用性
   nameserver: #!replace
-    - https://223.5.5.5/dns-query
+    - https://dns.alidns.com/dns-query
     - https://doh.pub/dns-query
 
-  # 覆盖原配置里可能存在的 fallback，避免残留 8.8.8.8 / 1.1.1.1 导致 timeout
-  fallback: #!replace
-    - https://223.5.5.5/dns-query
+  nameserver-policy:
+    '+.cn':
+      - https://dns.alidns.com/dns-query
+      - https://doh.pub/dns-query
+    'geosite:cn':
+      - https://dns.alidns.com/dns-query
+      - https://doh.pub/dns-query
 
-  fake-ip-filter: #!replace
-    # Local / system
+  fake-ip-filter:
     - '*.lan'
     - '*.local'
-    - '*.localdomain'
     - '*.localhost'
     - '*.home.arpa'
-    - 'time.*.com'
-    - 'ntp.*.com'
-    - '*.ntp.org.cn'
-    - '*.router.asus.com'
     - 'captive.apple.com'
     - 'time.apple.com'
     - 'time-ios.apple.com'
+    - '*.msftncsi.com'
+    - '*.msftconnecttest.com'
+    - '+.stun.*.*'
+    - '+.stun.*.*.*'
 
-    # Mainland banks
-    - 'icbc.com.cn'
-    - '*.icbc.com.cn'
-    - 'icbc-ltd.com'
-    - '*.icbc-ltd.com'
-    - 'ccb.com'
-    - '*.ccb.com'
-    - 'ccb.com.cn'
-    - '*.ccb.com.cn'
-    - 'abchina.com'
-    - '*.abchina.com'
-    - 'boc.cn'
-    - '*.boc.cn'
-    - 'bankofchina.com'
-    - '*.bankofchina.com'
-    - 'bankcomm.com'
-    - '*.bankcomm.com'
-    - 'psbc.com'
-    - '*.psbc.com'
-    - 'psbc.com.cn'
-    - '*.psbc.com.cn'
-    - 'cmbchina.com'
-    - '*.cmbchina.com'
-    - '8008205555.com'
-    - '*.8008205555.com'
-    - 'cib.com.cn'
-    - '*.cib.com.cn'
-    - 'jjccb.com'
-    - '*.jjccb.com'
-    - 'jycbank.com'
-    - '*.jycbank.com'
-    - 'jx-bank.com'
-    - '*.jx-bank.com'
-    - 'spdb.com.cn'
-    - '*.spdb.com.cn'
-    - 'citicbank.com'
-    - '*.citicbank.com'
-    - 'cebbank.com'
-    - '*.cebbank.com'
-    - 'cmbc.com.cn'
-    - '*.cmbc.com.cn'
-    - 'hxb.com.cn'
-    - '*.hxb.com.cn'
-    - 'cgbchina.com.cn'
-    - '*.cgbchina.com.cn'
-    - 'pingan.com'
-    - '*.pingan.com'
-
-    # 招联金融 / 贷款
-    - 'mucfc.com'
-    - '*.mucfc.com'
-
-    # HK banks / fintech
-    - 'hsbc.com.hk'
-    - '*.hsbc.com.hk'
-    - 'hsbc.com'
-    - '*.hsbc.com'
-    - 'hangseng.com'
-    - '*.hangseng.com'
-    - 'za.group'
-    - '*.za.group'
-    - 'za.bank'
-    - '*.za.bank'
-    - 'welab.bank'
-    - '*.welab.bank'
-    - 'antbank.hk'
-    - '*.antbank.hk'
-    - 'elebank.com'
-    - '*.elebank.com'
-
-    # UAE bank / shopping
-    - 'mashreq.com'
-    - '*.mashreq.com'
-    - 'dubizzle.com'
-    - '*.dubizzle.com'
-    - 'uae.dubizzle.com'
-    - 'likecard.com'
-    - '*.likecard.com'
-    - 'en.likecard.com'
-
-    # Alipay / Ant / Huabei / MYbank
-    - 'alipay.com'
-    - '*.alipay.com'
-    - 'alipayobjects.com'
-    - '*.alipayobjects.com'
-    - 'alipaydns.com'
-    - '*.alipaydns.com'
-    - 'antgroup.com'
-    - '*.antgroup.com'
-    - 'antfin.com'
-    - '*.antfin.com'
-    - 'mybank.cn'
-    - '*.mybank.cn'
-
-    # Meituan Wallet / 月付 / 美团金融
-    - 'meituan.com'
-    - '*.meituan.com'
-    - 'meituan.net'
-    - '*.meituan.net'
-    - 'meituanimg.com'
-    - '*.meituanimg.com'
-    - 'sankuai.com'
-    - '*.sankuai.com'
-    - 'dianping.com'
-    - '*.dianping.com'
-    - 'dpfile.com'
-    - '*.dpfile.com'
-    - 'maoyan.com'
-    - '*.maoyan.com'
-
-    # Douyin / Douyin Pay / 抖音月付
-    - 'douyin.com'
-    - '*.douyin.com'
-    - 'douyinpay.com'
-    - '*.douyinpay.com'
-    - 'amemv.com'
-    - '*.amemv.com'
-    - 'snssdk.com'
-    - '*.snssdk.com'
-    - 'bytedance.com'
-    - '*.bytedance.com'
-    - 'byteimg.com'
-    - '*.byteimg.com'
-    - 'pstatp.com'
-    - '*.pstatp.com'
-    - 'toutiao.com'
-    - '*.toutiao.com'
-    - 'zijieapi.com'
-    - '*.zijieapi.com'
-    - 'bytecdn.cn'
-    - '*.bytecdn.cn'
-
-    # Common payment / card / risk-control
-    - 'unionpay.com'
-    - '*.unionpay.com'
-    - '95516.com'
-    - '*.95516.com'
-    - 'chinapay.com'
-    - '*.chinapay.com'
-    - 'chinaums.com'
-    - '*.chinaums.com'
-    - 'tenpay.com'
-    - '*.tenpay.com'
-    - 'weixin.qq.com'
-    - '*.weixin.qq.com'
-    - 'wechat.com'
-    - '*.wechat.com'
-    - 'qq.com'
-    - '*.qq.com'
-    - 'gtimg.com'
-    - '*.gtimg.com'
-    - 'gtimg.cn'
-    - '*.gtimg.cn'
-    - 'qcloud.com'
-    - '*.qcloud.com'
-    - 'tencentcloudapi.com'
-    - '*.tencentcloudapi.com'
-    - 'geetest.com'
-    - '*.geetest.com'
-    - 'aliyuncs.com'
-    - '*.aliyuncs.com'
-    - 'aliyun.com'
-    - '*.aliyun.com'
-    - 'alicdn.com'
-    - '*.alicdn.com'
-    - 'mmstat.com'
-    - '*.mmstat.com'
-    - 'umeng.com'
-    - '*.umeng.com'
-    - 'taobao.com'
-    - '*.taobao.com'
-    - 'tmall.com'
-    - '*.tmall.com'
-
-    # Microsoft identity / auth only
-    # 注意：不要把 Teams / SharePoint / OneDrive / Outlook 放进 fake-ip-filter
-    # 它们应走 Fake-IP + 代理
-    - 'microsoftonline.com'
-    - '*.microsoftonline.com'
-    - 'msauth.net'
-    - '*.msauth.net'
-    - 'msftauth.net'
-    - '*.msftauth.net'
-    - 'msftidentity.com'
-    - '*.msftidentity.com'
-    - 'live.com'
-    - '*.live.com'
-    - 'login.microsoft.com'
-    - '*.login.microsoft.com'
-    - 'login.windows.net'
-    - '*.login.windows.net'
+    - '+.icbc.com.cn'
+    - '+.ccb.com'
+    - '+.ccb.com.cn'
+    - '+.abchina.com'
+    - '+.boc.cn'
+    - '+.bankofchina.com'
+    - '+.cmbchina.com'
+    - '+.unionpay.com'
+    - '+.95516.com'
+    - '+.alipay.com'
+    - '+.alipayobjects.com'
+    - '+.tenpay.com'
+    - '+.wechat.com'
+    - '+.weixin.qq.com'
+    - '+.qq.com'
+    - '+.microsoftonline.com'
+    - '+.msauth.net'
+    - '+.msftauth.net'
+    - '+.msftidentity.com'
+    - '+.login.microsoft.com'
+    - '+.login.windows.net'
 
 rules:
-  # 1. Mainland banks
   - DOMAIN-SUFFIX,icbc.com.cn,DIRECT
-  - DOMAIN-SUFFIX,icbc-ltd.com,DIRECT
   - DOMAIN-SUFFIX,ccb.com,DIRECT
   - DOMAIN-SUFFIX,ccb.com.cn,DIRECT
   - DOMAIN-SUFFIX,abchina.com,DIRECT
   - DOMAIN-SUFFIX,boc.cn,DIRECT
   - DOMAIN-SUFFIX,bankofchina.com,DIRECT
-  - DOMAIN-SUFFIX,bankcomm.com,DIRECT
-  - DOMAIN-SUFFIX,psbc.com,DIRECT
-  - DOMAIN-SUFFIX,psbc.com.cn,DIRECT
   - DOMAIN-SUFFIX,cmbchina.com,DIRECT
-  - DOMAIN-SUFFIX,8008205555.com,DIRECT
-  - DOMAIN-SUFFIX,cib.com.cn,DIRECT
-  - DOMAIN-SUFFIX,jjccb.com,DIRECT
-  - DOMAIN-SUFFIX,jycbank.com,DIRECT
-  - DOMAIN-SUFFIX,jx-bank.com,DIRECT
-  - DOMAIN-SUFFIX,spdb.com.cn,DIRECT
-  - DOMAIN-SUFFIX,citicbank.com,DIRECT
-  - DOMAIN-SUFFIX,cebbank.com,DIRECT
-  - DOMAIN-SUFFIX,cmbc.com.cn,DIRECT
-  - DOMAIN-SUFFIX,hxb.com.cn,DIRECT
-  - DOMAIN-SUFFIX,cgbchina.com.cn,DIRECT
-  - DOMAIN-SUFFIX,pingan.com,DIRECT
-
-  # 2. Loan
-  - DOMAIN-SUFFIX,mucfc.com,DIRECT
-
-  # 3. HK banks / fintech
-  - DOMAIN-SUFFIX,hsbc.com.hk,DIRECT
-  - DOMAIN-SUFFIX,hsbc.com,DIRECT
-  - DOMAIN-SUFFIX,hangseng.com,DIRECT
-  - DOMAIN-SUFFIX,za.group,DIRECT
-  - DOMAIN-SUFFIX,za.bank,DIRECT
-  - DOMAIN-SUFFIX,welab.bank,DIRECT
-  - DOMAIN-SUFFIX,antbank.hk,DIRECT
-  - DOMAIN-SUFFIX,elebank.com,DIRECT
-
-  # 4. UAE bank / shopping
-  - DOMAIN-SUFFIX,mashreq.com,DIRECT
-  - DOMAIN-SUFFIX,dubizzle.com,DIRECT
-  - DOMAIN-SUFFIX,likecard.com,DIRECT
-
-  # 5. Alipay / Ant / Huabei / MYbank
-  - DOMAIN-SUFFIX,alipay.com,DIRECT
-  - DOMAIN-SUFFIX,alipayobjects.com,DIRECT
-  - DOMAIN-SUFFIX,alipaydns.com,DIRECT
-  - DOMAIN-SUFFIX,antgroup.com,DIRECT
-  - DOMAIN-SUFFIX,antfin.com,DIRECT
-  - DOMAIN-SUFFIX,mybank.cn,DIRECT
-
-  # 6. Meituan Wallet / 月付 / 美团金融
-  - DOMAIN-SUFFIX,meituan.com,DIRECT
-  - DOMAIN-SUFFIX,meituan.net,DIRECT
-  - DOMAIN-SUFFIX,meituanimg.com,DIRECT
-  - DOMAIN-SUFFIX,sankuai.com,DIRECT
-  - DOMAIN-SUFFIX,dianping.com,DIRECT
-  - DOMAIN-SUFFIX,dpfile.com,DIRECT
-  - DOMAIN-SUFFIX,maoyan.com,DIRECT
-
-  # 7. Douyin / Douyin Pay / 抖音月付
-  - DOMAIN-SUFFIX,douyin.com,DIRECT
-  - DOMAIN-SUFFIX,douyinpay.com,DIRECT
-  - DOMAIN-SUFFIX,amemv.com,DIRECT
-  - DOMAIN-SUFFIX,snssdk.com,DIRECT
-  - DOMAIN-SUFFIX,bytedance.com,DIRECT
-  - DOMAIN-SUFFIX,byteimg.com,DIRECT
-  - DOMAIN-SUFFIX,pstatp.com,DIRECT
-  - DOMAIN-SUFFIX,toutiao.com,DIRECT
-  - DOMAIN-SUFFIX,zijieapi.com,DIRECT
-  - DOMAIN-SUFFIX,bytecdn.cn,DIRECT
-
-  # 8. Common payment / card / risk-control
   - DOMAIN-SUFFIX,unionpay.com,DIRECT
   - DOMAIN-SUFFIX,95516.com,DIRECT
-  - DOMAIN-SUFFIX,chinapay.com,DIRECT
-  - DOMAIN-SUFFIX,chinaums.com,DIRECT
+  - DOMAIN-SUFFIX,alipay.com,DIRECT
+  - DOMAIN-SUFFIX,alipayobjects.com,DIRECT
   - DOMAIN-SUFFIX,tenpay.com,DIRECT
-  - DOMAIN-SUFFIX,weixin.qq.com,DIRECT
   - DOMAIN-SUFFIX,wechat.com,DIRECT
+  - DOMAIN-SUFFIX,weixin.qq.com,DIRECT
   - DOMAIN-SUFFIX,qq.com,DIRECT
-  - DOMAIN-SUFFIX,gtimg.com,DIRECT
-  - DOMAIN-SUFFIX,gtimg.cn,DIRECT
-  - DOMAIN-SUFFIX,qcloud.com,DIRECT
-  - DOMAIN-SUFFIX,tencentcloudapi.com,DIRECT
-  - DOMAIN-SUFFIX,geetest.com,DIRECT
-  - DOMAIN-SUFFIX,aliyuncs.com,DIRECT
-  - DOMAIN-SUFFIX,aliyun.com,DIRECT
-  - DOMAIN-SUFFIX,alicdn.com,DIRECT
-  - DOMAIN-SUFFIX,mmstat.com,DIRECT
-  - DOMAIN-SUFFIX,umeng.com,DIRECT
-  - DOMAIN-SUFFIX,taobao.com,DIRECT
-  - DOMAIN-SUFFIX,tmall.com,DIRECT
-
-  # 9. Microsoft identity / auth layer - DIRECT
   - DOMAIN-SUFFIX,microsoftonline.com,DIRECT
   - DOMAIN-SUFFIX,msauth.net,DIRECT
   - DOMAIN-SUFFIX,msftauth.net,DIRECT
   - DOMAIN-SUFFIX,msftidentity.com,DIRECT
-  - DOMAIN-SUFFIX,live.com,DIRECT
   - DOMAIN-SUFFIX,login.microsoft.com,DIRECT
   - DOMAIN-SUFFIX,login.windows.net,DIRECT
-
-  # 10. Microsoft business layer - PROXY
-  # 不放 fake-ip-filter，让这些域名走 Fake-IP + 代理
-  - DOMAIN-SUFFIX,teams.microsoft.com,🚀 节点选择
-  - DOMAIN-SUFFIX,skype.com,🚀 节点选择
-  - DOMAIN-SUFFIX,skypeassets.com,🚀 节点选择
-  - DOMAIN-SUFFIX,lync.com,🚀 节点选择
-  - DOMAIN-SUFFIX,office.com,🚀 节点选择
-  - DOMAIN-SUFFIX,office365.com,🚀 节点选择
-  - DOMAIN-SUFFIX,office.net,🚀 节点选择
-  - DOMAIN-SUFFIX,sharepoint.com,🚀 节点选择
-  - DOMAIN-SUFFIX,onedrive.com,🚀 节点选择
-  - DOMAIN-SUFFIX,outlook.com,🚀 节点选择
