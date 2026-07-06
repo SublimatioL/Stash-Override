@@ -1,5 +1,5 @@
-name: "Mainland DNS Direct"
-desc: "Mainland DNS with direct rules for bank payment and auth"
+name: "Mainland DNS Direct FakeIP"
+desc: "Mainland DNS with direct rules and fake-ip filter"
 
 dns:
   default-nameserver:
@@ -9,6 +9,41 @@ dns:
     - https://doh.pub/dns-query
     - https://dns.alidns.com/dns-query
   follow-rule: false
+  fake-ip-filter:
+    - "*.lan"
+    - "*.local"
+    - "*.localdomain"
+    - "*.home.arpa"
+    - "localhost"
+    - "captive.apple.com"
+    - "time.apple.com"
+    - "time-ios.apple.com"
+    - "*.ntp.org.cn"
+    - "*.msftncsi.com"
+    - "*.msftconnecttest.com"
+    - "+.icbc.com.cn"
+    - "+.ccb.com"
+    - "+.ccb.com.cn"
+    - "+.abchina.com"
+    - "+.boc.cn"
+    - "+.bankofchina.com"
+    - "+.cmbchina.com"
+    - "+.unionpay.com"
+    - "+.95516.com"
+    - "+.alipay.com"
+    - "+.alipayobjects.com"
+    - "+.alipaydns.com"
+    - "+.tenpay.com"
+    - "+.wechat.com"
+    - "+.weixin.qq.com"
+    - "+.qq.com"
+    - "+.microsoftonline.com"
+    - "+.msauth.net"
+    - "+.msftauth.net"
+    - "+.msftidentity.com"
+    - "+.login.microsoft.com"
+    - "+.login.windows.net"
+    - "+.live.com"
 
 rules:
   - "DOMAIN-SUFFIX,icbc.com.cn,DIRECT"
