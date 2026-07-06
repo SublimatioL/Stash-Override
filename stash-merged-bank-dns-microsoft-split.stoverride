@@ -1,5 +1,5 @@
-name: "Mainland DNS Direct FakeIP"
-desc: "Mainland DNS with direct rules and fake-ip filter"
+name: "Mainland DNS Direct FakeIP Policy"
+desc: "Mainland DNS with direct rules fake-ip filter and CN DNS policy"
 
 dns:
   default-nameserver:
@@ -9,6 +9,10 @@ dns:
     - https://doh.pub/dns-query
     - https://dns.alidns.com/dns-query
   follow-rule: false
+  nameserver-policy:
+    "+.cn":
+      - https://doh.pub/dns-query
+      - https://dns.alidns.com/dns-query
   fake-ip-filter:
     - "*.lan"
     - "*.local"
