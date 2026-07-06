@@ -1,5 +1,5 @@
-name: "Mainland DNS Test"
-desc: "Mainland DNS override test"
+name: "Mainland DNS Direct"
+desc: "Mainland DNS with direct rules for bank payment and auth"
 
 dns:
   default-nameserver:
@@ -9,3 +9,28 @@ dns:
     - https://doh.pub/dns-query
     - https://dns.alidns.com/dns-query
   follow-rule: false
+
+rules:
+  - "DOMAIN-SUFFIX,icbc.com.cn,DIRECT"
+  - "DOMAIN-SUFFIX,ccb.com,DIRECT"
+  - "DOMAIN-SUFFIX,ccb.com.cn,DIRECT"
+  - "DOMAIN-SUFFIX,abchina.com,DIRECT"
+  - "DOMAIN-SUFFIX,boc.cn,DIRECT"
+  - "DOMAIN-SUFFIX,bankofchina.com,DIRECT"
+  - "DOMAIN-SUFFIX,cmbchina.com,DIRECT"
+  - "DOMAIN-SUFFIX,unionpay.com,DIRECT"
+  - "DOMAIN-SUFFIX,95516.com,DIRECT"
+  - "DOMAIN-SUFFIX,alipay.com,DIRECT"
+  - "DOMAIN-SUFFIX,alipayobjects.com,DIRECT"
+  - "DOMAIN-SUFFIX,alipaydns.com,DIRECT"
+  - "DOMAIN-SUFFIX,tenpay.com,DIRECT"
+  - "DOMAIN-SUFFIX,wechat.com,DIRECT"
+  - "DOMAIN-SUFFIX,weixin.qq.com,DIRECT"
+  - "DOMAIN-SUFFIX,qq.com,DIRECT"
+  - "DOMAIN-SUFFIX,microsoftonline.com,DIRECT"
+  - "DOMAIN-SUFFIX,msauth.net,DIRECT"
+  - "DOMAIN-SUFFIX,msftauth.net,DIRECT"
+  - "DOMAIN-SUFFIX,msftidentity.com,DIRECT"
+  - "DOMAIN-SUFFIX,login.microsoft.com,DIRECT"
+  - "DOMAIN-SUFFIX,login.windows.net,DIRECT"
+  - "DOMAIN-SUFFIX,live.com,DIRECT"
