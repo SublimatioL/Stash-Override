@@ -1,79 +1,190 @@
-name: "Mainland Fast Leak-Safe DNS"
+name: Stash Config
+desc: DNS and service rules.
+mode: rule
 
-dns:
-  enable: true
-  ipv6: false
-  enhanced-mode: fake-ip
-  fake-ip-range: 198.18.0.1/16
-  default-nameserver:
-    - 223.5.5.5
-    - 119.29.29.29
-  nameserver:
-    - 223.5.5.5
-    - 119.29.29.29
-  follow-rule: false
+# DNS
+dns: #!replace
+  nameserver: &remote_dns
+  - https://1.1.1.1/dns-query
+  - https://8.8.8.8/dns-query
+  follow-rule: true
   skip-cert-verify: false
   nameserver-policy:
-    "+.cn":
-      - 223.5.5.5
-      - 119.29.29.29
+    gd.bjnet2.com: &local_dns
+    - https://223.5.5.5/dns-query
+    - https://1.12.12.12/dns-query
+    gd2.bjnet2.com: *local_dns
+    in.bjnet3.org: *local_dns
+    captive.apple.com: *local_dns
+    time.apple.com: *local_dns
+    time-ios.apple.com: *local_dns
+    +.google.cn: *remote_dns
+    +.googleapis.cn: *remote_dns
+    +.google.com: *remote_dns
+    +.googleapis.com: *remote_dns
+    +.googleusercontent.com: *remote_dns
+    +.gstatic.com: *remote_dns
+    +.googlevideo.com: *remote_dns
+    +.youtube.com: *remote_dns
+    +.ytimg.com: *remote_dns
+    +.openai.com: *remote_dns
+    +.chatgpt.com: *remote_dns
+    +.anthropic.com: *remote_dns
+    +.claude.ai: *remote_dns
+    +.microsoftonline.com: *remote_dns
+    +.msauth.net: *remote_dns
+    +.msftauth.net: *remote_dns
+    +.msftidentity.com: *remote_dns
+    +.login.microsoft.com: *remote_dns
+    +.login.windows.net: *remote_dns
+    +.live.com: *remote_dns
+    +.github.com: *remote_dns
+    +.githubusercontent.com: *remote_dns
+    +.icbc.com.cn: *local_dns
+    +.ccb.com: *local_dns
+    +.ccb.com.cn: *local_dns
+    +.abchina.com: *local_dns
+    +.boc.cn: *local_dns
+    +.bankofchina.com: *local_dns
+    +.cmbchina.com: *local_dns
+    +.unionpay.com: *local_dns
+    +.95516.com: *local_dns
+    +.alipay.com: *local_dns
+    +.alipayobjects.com: *local_dns
+    +.alipaydns.com: *local_dns
+    +.tenpay.com: *local_dns
+    +.wechat.com: *local_dns
+    +.weixin.qq.com: *local_dns
+    +.qq.com: *local_dns
+    +.microsoftonline.cn: *local_dns
+    +.office365.cn: *local_dns
+    +.partner.outlook.cn: *local_dns
+    +.ntp.org.cn: *local_dns
+    +.msftncsi.com: *local_dns
+    +.msftconnecttest.com: *local_dns
+    geosite:cn: *local_dns
   fake-ip-filter:
-    - "*.lan"
-    - "*.local"
-    - "*.localdomain"
-    - "*.home.arpa"
-    - "localhost"
-    - "captive.apple.com"
-    - "time.apple.com"
-    - "time-ios.apple.com"
-    - "*.ntp.org.cn"
-    - "*.msftncsi.com"
-    - "*.msftconnecttest.com"
-    - "+.icbc.com.cn"
-    - "+.ccb.com"
-    - "+.ccb.com.cn"
-    - "+.abchina.com"
-    - "+.boc.cn"
-    - "+.bankofchina.com"
-    - "+.cmbchina.com"
-    - "+.unionpay.com"
-    - "+.95516.com"
-    - "+.alipay.com"
-    - "+.alipayobjects.com"
-    - "+.alipaydns.com"
-    - "+.tenpay.com"
-    - "+.wechat.com"
-    - "+.weixin.qq.com"
-    - "+.qq.com"
-    - "+.microsoftonline.com"
-    - "+.msauth.net"
-    - "+.msftauth.net"
-    - "+.msftidentity.com"
-    - "+.login.microsoft.com"
-    - "+.login.windows.net"
-    - "+.live.com"
+  - localhost
+  - '*.lan'
+  - '*.local'
+  - '*.localdomain'
+  - '*.home.arpa'
+  - captive.apple.com
+  - time.apple.com
+  - time-ios.apple.com
+  - +.icbc.com.cn
+  - +.ccb.com
+  - +.ccb.com.cn
+  - +.abchina.com
+  - +.boc.cn
+  - +.bankofchina.com
+  - +.cmbchina.com
+  - +.unionpay.com
+  - +.95516.com
+  - +.alipay.com
+  - +.alipayobjects.com
+  - +.alipaydns.com
+  - +.tenpay.com
+  - +.wechat.com
+  - +.weixin.qq.com
+  - +.qq.com
+  - +.microsoftonline.cn
+  - +.office365.cn
+  - +.partner.outlook.cn
+  - +.ntp.org.cn
+  - +.msftncsi.com
+  - +.msftconnecttest.com
+  - +.stun.*.*
+  - +.stun.*.*.*
+  - +.stun.*.*.*.*
+  - +.stun.*.*.*.*.*
 
-rules:
-  - "DOMAIN-SUFFIX,icbc.com.cn,DIRECT"
-  - "DOMAIN-SUFFIX,ccb.com,DIRECT"
-  - "DOMAIN-SUFFIX,ccb.com.cn,DIRECT"
-  - "DOMAIN-SUFFIX,abchina.com,DIRECT"
-  - "DOMAIN-SUFFIX,boc.cn,DIRECT"
-  - "DOMAIN-SUFFIX,bankofchina.com,DIRECT"
-  - "DOMAIN-SUFFIX,cmbchina.com,DIRECT"
-  - "DOMAIN-SUFFIX,unionpay.com,DIRECT"
-  - "DOMAIN-SUFFIX,95516.com,DIRECT"
-  - "DOMAIN-SUFFIX,alipay.com,DIRECT"
-  - "DOMAIN-SUFFIX,alipayobjects.com,DIRECT"
-  - "DOMAIN-SUFFIX,alipaydns.com,DIRECT"
-  - "DOMAIN-SUFFIX,tenpay.com,DIRECT"
-  - "DOMAIN-SUFFIX,wechat.com,DIRECT"
-  - "DOMAIN-SUFFIX,weixin.qq.com,DIRECT"
-  - "DOMAIN-SUFFIX,qq.com,DIRECT"
-  - "DOMAIN-SUFFIX,microsoftonline.com,DIRECT"
-  - "DOMAIN-SUFFIX,msauth.net,DIRECT"
-  - "DOMAIN-SUFFIX,msftauth.net,DIRECT"
-  - "DOMAIN-SUFFIX,msftidentity.com,DIRECT"
-  - "DOMAIN-SUFFIX,login.microsoft.com,DIRECT"
-  - "DOMAIN-SUFFIX,login.windows.net,DIRECT"
-  - "DOMAIN-SUFFIX,live.com,DIRECT"
+# Services
+rule-providers:
+  stash-proxy-domain:
+    behavior: domain
+    format: yaml
+    url: https://raw.githubusercontent.com/Loyalsoldier/clash-rules/release/proxy.txt
+    interval: 86400
+  stash-telegram-ip:
+    behavior: ipcidr
+    format: yaml
+    url: https://raw.githubusercontent.com/Loyalsoldier/clash-rules/release/telegramcidr.txt
+    interval: 86400
+  stash-cn-ip:
+    behavior: ipcidr
+    format: yaml
+    url: https://raw.githubusercontent.com/Loyalsoldier/clash-rules/release/cncidr.txt
+    interval: 86400
+
+# Rules
+rules: #!replace
+- IP-CIDR6,::/0,REJECT,no-resolve
+- DST-PORT,53,REJECT
+- IP-CIDR,223.5.5.5/32,DIRECT,no-resolve
+- IP-CIDR,1.12.12.12/32,DIRECT,no-resolve
+- IP-CIDR,1.1.1.1/32,节点选择,no-resolve
+- IP-CIDR,8.8.8.8/32,节点选择,no-resolve
+- DOMAIN,gd.bjnet2.com,DIRECT
+- DOMAIN,gd2.bjnet2.com,DIRECT
+- DOMAIN,in.bjnet3.org,DIRECT
+- DOMAIN-SUFFIX,google.cn,节点选择
+- DOMAIN-SUFFIX,googleapis.cn,节点选择
+- DOMAIN-SUFFIX,google.com,节点选择
+- DOMAIN-SUFFIX,googleapis.com,节点选择
+- DOMAIN-SUFFIX,googleusercontent.com,节点选择
+- DOMAIN-SUFFIX,gstatic.com,节点选择
+- DOMAIN-SUFFIX,googlevideo.com,节点选择
+- DOMAIN-SUFFIX,youtube.com,节点选择
+- DOMAIN-SUFFIX,ytimg.com,节点选择
+- DOMAIN-SUFFIX,openai.com,节点选择
+- DOMAIN-SUFFIX,chatgpt.com,节点选择
+- DOMAIN-SUFFIX,anthropic.com,节点选择
+- DOMAIN-SUFFIX,claude.ai,节点选择
+- DOMAIN-SUFFIX,microsoftonline.com,节点选择
+- DOMAIN-SUFFIX,msauth.net,节点选择
+- DOMAIN-SUFFIX,msftauth.net,节点选择
+- DOMAIN-SUFFIX,msftidentity.com,节点选择
+- DOMAIN-SUFFIX,login.microsoft.com,节点选择
+- DOMAIN-SUFFIX,login.windows.net,节点选择
+- DOMAIN-SUFFIX,live.com,节点选择
+- DOMAIN-SUFFIX,github.com,节点选择
+- DOMAIN-SUFFIX,githubusercontent.com,节点选择
+- DOMAIN,captive.apple.com,DIRECT
+- DOMAIN,time.apple.com,DIRECT
+- DOMAIN,time-ios.apple.com,DIRECT
+- DOMAIN-SUFFIX,icbc.com.cn,DIRECT
+- DOMAIN-SUFFIX,ccb.com,DIRECT
+- DOMAIN-SUFFIX,ccb.com.cn,DIRECT
+- DOMAIN-SUFFIX,abchina.com,DIRECT
+- DOMAIN-SUFFIX,boc.cn,DIRECT
+- DOMAIN-SUFFIX,bankofchina.com,DIRECT
+- DOMAIN-SUFFIX,cmbchina.com,DIRECT
+- DOMAIN-SUFFIX,unionpay.com,DIRECT
+- DOMAIN-SUFFIX,95516.com,DIRECT
+- DOMAIN-SUFFIX,alipay.com,DIRECT
+- DOMAIN-SUFFIX,alipayobjects.com,DIRECT
+- DOMAIN-SUFFIX,alipaydns.com,DIRECT
+- DOMAIN-SUFFIX,tenpay.com,DIRECT
+- DOMAIN-SUFFIX,wechat.com,DIRECT
+- DOMAIN-SUFFIX,weixin.qq.com,DIRECT
+- DOMAIN-SUFFIX,qq.com,DIRECT
+- DOMAIN-SUFFIX,microsoftonline.cn,DIRECT
+- DOMAIN-SUFFIX,office365.cn,DIRECT
+- DOMAIN-SUFFIX,partner.outlook.cn,DIRECT
+- DOMAIN-SUFFIX,ntp.org.cn,DIRECT
+- DOMAIN-SUFFIX,msftncsi.com,DIRECT
+- DOMAIN-SUFFIX,msftconnecttest.com,DIRECT
+- GEOSITE,cn,DIRECT
+- RULE-SET,stash-proxy-domain,节点选择
+- RULE-SET,stash-telegram-ip,节点选择,no-resolve
+- IP-CIDR,127.0.0.0/8,DIRECT,no-resolve
+- IP-CIDR,10.0.0.0/8,DIRECT,no-resolve
+- IP-CIDR,172.16.0.0/12,DIRECT,no-resolve
+- IP-CIDR,192.168.0.0/16,DIRECT,no-resolve
+- IP-CIDR,169.254.0.0/16,DIRECT,no-resolve
+- IP-CIDR,100.64.0.0/10,DIRECT,no-resolve
+- IP-CIDR,224.0.0.0/4,DIRECT,no-resolve
+- IP-CIDR,255.255.255.255/32,DIRECT,no-resolve
+- RULE-SET,stash-cn-ip,DIRECT,no-resolve
+- MATCH,节点选择
