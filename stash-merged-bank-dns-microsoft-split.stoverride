@@ -2,6 +2,9 @@ name: Stash Config
 desc: DNS and service rules.
 mode: rule
 
+hosts:
+  localhost: 127.0.0.1
+
 # DNS
 dns: #!replace
   nameserver: &remote_dns
@@ -12,7 +15,7 @@ dns: #!replace
   nameserver-policy:
     gd.bjnet2.com: &local_dns
     - https://223.5.5.5/dns-query
-    - https://1.12.12.12/dns-query
+    - https://223.6.6.6/dns-query
     gd2.bjnet2.com: *local_dns
     in.bjnet3.org: *local_dns
     captive.apple.com: *local_dns
@@ -29,6 +32,13 @@ dns: #!replace
     +.ytimg.com: *remote_dns
     +.openai.com: *remote_dns
     +.chatgpt.com: *remote_dns
+    +.oaistatic.com: *remote_dns
+    +.oaiusercontent.com: *remote_dns
+    +.telegram.org: *remote_dns
+    +.telegram.me: *remote_dns
+    +.t.me: *remote_dns
+    +.telegra.ph: *remote_dns
+    +.telesco.pe: *remote_dns
     +.anthropic.com: *remote_dns
     +.claude.ai: *remote_dns
     +.microsoftonline.com: *remote_dns
@@ -56,6 +66,17 @@ dns: #!replace
     +.wechat.com: *local_dns
     +.weixin.qq.com: *local_dns
     +.qq.com: *local_dns
+    +.bilibili.com: *local_dns
+    +.biliapi.com: *local_dns
+    +.biliapi.net: *local_dns
+    +.bilivideo.com: *local_dns
+    +.bilivideo.cn: *local_dns
+    +.hdslb.com: *local_dns
+    +.iqiyi.com: *local_dns
+    +.qiyi.com: *local_dns
+    +.iqiyipic.com: *local_dns
+    +.youku.com: *local_dns
+    +.ykimg.com: *local_dns
     +.microsoftonline.cn: *local_dns
     +.office365.cn: *local_dns
     +.partner.outlook.cn: *local_dns
@@ -72,28 +93,8 @@ dns: #!replace
   - captive.apple.com
   - time.apple.com
   - time-ios.apple.com
-  - +.icbc.com.cn
-  - +.ccb.com
-  - +.ccb.com.cn
-  - +.abchina.com
-  - +.boc.cn
-  - +.bankofchina.com
-  - +.cmbchina.com
-  - +.unionpay.com
-  - +.95516.com
-  - +.alipay.com
-  - +.alipayobjects.com
-  - +.alipaydns.com
-  - +.tenpay.com
-  - +.wechat.com
-  - +.weixin.qq.com
-  - +.qq.com
-  - +.microsoftonline.cn
-  - +.office365.cn
-  - +.partner.outlook.cn
-  - +.ntp.org.cn
-  - +.msftncsi.com
-  - +.msftconnecttest.com
+  - '*.msftncsi.com'
+  - '*.msftconnecttest.com'
   - +.stun.*.*
   - +.stun.*.*.*
   - +.stun.*.*.*.*
@@ -122,12 +123,21 @@ rules: #!replace
 - IP-CIDR6,::/0,REJECT,no-resolve
 - DST-PORT,53,REJECT
 - IP-CIDR,223.5.5.5/32,DIRECT,no-resolve
-- IP-CIDR,1.12.12.12/32,DIRECT,no-resolve
+- IP-CIDR,223.6.6.6/32,DIRECT,no-resolve
 - IP-CIDR,1.1.1.1/32,节点选择,no-resolve
 - IP-CIDR,8.8.8.8/32,节点选择,no-resolve
 - DOMAIN,gd.bjnet2.com,DIRECT
 - DOMAIN,gd2.bjnet2.com,DIRECT
 - DOMAIN,in.bjnet3.org,DIRECT
+- IP-CIDR,127.0.0.0/8,DIRECT,no-resolve
+- IP-CIDR,10.0.0.0/8,DIRECT,no-resolve
+- IP-CIDR,172.16.0.0/12,DIRECT,no-resolve
+- IP-CIDR,192.168.0.0/16,DIRECT,no-resolve
+- IP-CIDR,169.254.0.0/16,DIRECT,no-resolve
+- IP-CIDR,100.64.0.0/10,DIRECT,no-resolve
+- IP-CIDR,224.0.0.0/4,DIRECT,no-resolve
+- IP-CIDR,255.255.255.255/32,DIRECT,no-resolve
+- DOMAIN,localhost,DIRECT
 - DOMAIN-SUFFIX,google.cn,节点选择
 - DOMAIN-SUFFIX,googleapis.cn,节点选择
 - DOMAIN-SUFFIX,google.com,节点选择
@@ -139,6 +149,13 @@ rules: #!replace
 - DOMAIN-SUFFIX,ytimg.com,节点选择
 - DOMAIN-SUFFIX,openai.com,节点选择
 - DOMAIN-SUFFIX,chatgpt.com,节点选择
+- DOMAIN-SUFFIX,oaistatic.com,节点选择
+- DOMAIN-SUFFIX,oaiusercontent.com,节点选择
+- DOMAIN-SUFFIX,telegram.org,节点选择
+- DOMAIN-SUFFIX,telegram.me,节点选择
+- DOMAIN-SUFFIX,t.me,节点选择
+- DOMAIN-SUFFIX,telegra.ph,节点选择
+- DOMAIN-SUFFIX,telesco.pe,节点选择
 - DOMAIN-SUFFIX,anthropic.com,节点选择
 - DOMAIN-SUFFIX,claude.ai,节点选择
 - DOMAIN-SUFFIX,microsoftonline.com,节点选择
@@ -169,6 +186,17 @@ rules: #!replace
 - DOMAIN-SUFFIX,wechat.com,DIRECT
 - DOMAIN-SUFFIX,weixin.qq.com,DIRECT
 - DOMAIN-SUFFIX,qq.com,DIRECT
+- DOMAIN-SUFFIX,bilibili.com,DIRECT
+- DOMAIN-SUFFIX,biliapi.com,DIRECT
+- DOMAIN-SUFFIX,biliapi.net,DIRECT
+- DOMAIN-SUFFIX,bilivideo.com,DIRECT
+- DOMAIN-SUFFIX,bilivideo.cn,DIRECT
+- DOMAIN-SUFFIX,hdslb.com,DIRECT
+- DOMAIN-SUFFIX,iqiyi.com,DIRECT
+- DOMAIN-SUFFIX,qiyi.com,DIRECT
+- DOMAIN-SUFFIX,iqiyipic.com,DIRECT
+- DOMAIN-SUFFIX,youku.com,DIRECT
+- DOMAIN-SUFFIX,ykimg.com,DIRECT
 - DOMAIN-SUFFIX,microsoftonline.cn,DIRECT
 - DOMAIN-SUFFIX,office365.cn,DIRECT
 - DOMAIN-SUFFIX,partner.outlook.cn,DIRECT
@@ -178,13 +206,5 @@ rules: #!replace
 - GEOSITE,cn,DIRECT
 - RULE-SET,stash-proxy-domain,节点选择
 - RULE-SET,stash-telegram-ip,节点选择,no-resolve
-- IP-CIDR,127.0.0.0/8,DIRECT,no-resolve
-- IP-CIDR,10.0.0.0/8,DIRECT,no-resolve
-- IP-CIDR,172.16.0.0/12,DIRECT,no-resolve
-- IP-CIDR,192.168.0.0/16,DIRECT,no-resolve
-- IP-CIDR,169.254.0.0/16,DIRECT,no-resolve
-- IP-CIDR,100.64.0.0/10,DIRECT,no-resolve
-- IP-CIDR,224.0.0.0/4,DIRECT,no-resolve
-- IP-CIDR,255.255.255.255/32,DIRECT,no-resolve
 - RULE-SET,stash-cn-ip,DIRECT,no-resolve
 - MATCH,节点选择
